@@ -52,9 +52,7 @@ services:
       - _base_image_build
     command: ["--help"]
   quiz-register:
-    build:
-      context: ./quiz-register
-      dockerfile: Dockerfile
+    image: quiz-base-image
     env_file:
       - .env
     volumes:
