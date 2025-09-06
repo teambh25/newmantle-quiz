@@ -41,6 +41,7 @@ def call_upsert_quiz(configs: Config, quiz: dict):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", type=str, required=True, help="Date in YYYY-MM-DD format")
+    parser.add_argument("--answer", type=str, required=True, help="Answer Word")
     args = parser.parse_args()
     quiz = {
         "date": args.date,
@@ -51,4 +52,4 @@ if __name__ == "__main__":
             "딸기": 0.77
         }
     }
-    call_upsert_quiz(configs, quiz)
+    # call_upsert_quiz(configs, quiz)

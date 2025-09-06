@@ -1,14 +1,21 @@
 version: '3'
 services:
-  quiz-register:
-    build:
-      context: ./quiz-register
-      dockerfile: Dockerfile
-    env_file:
-      - .env
+  postgres:
+    image: pgvector/pgvector:pg17-trixie
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
     volumes:
-      - ./quiz-register:/src
-      - ./logs:/src/logs
+      - ./data/postgres:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   word-embedder:
     build:
       context: ./word-embedder
@@ -26,29 +33,33 @@ services:
       - ./word-embedder:/src
       - ./logs:/src/logs
       - ./data:/src/data
-  postgres:
-    image: pgvector/pgvector:pg17-trixie
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data/postgres:/var/lib/postgresql/data
-    restart: always
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-  data-loader:
+  _base_image_build:
     build:
-      context: ./data-loader
+      context: ./common
       dockerfile: Dockerfile
+    image: quiz-base-image
+
+  data-loader:
+    image: quiz-base-image
     env_file:
       - .env
     volumes:
       - ./data-loader:/src
       - ./logs:/src/logs
       - ./data:/src/data
+    depends_on:
+      - postgres
+      - _base_image_build
+    command: ["--help"]
+  quiz-register:
+    build:
+      context: ./quiz-register
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./quiz-register:/src
+      - ./logs:/src/logs
+    depends_on:
+      - _base_image_build
+    command: ["--help"]
