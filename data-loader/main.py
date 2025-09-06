@@ -6,7 +6,7 @@ from pgvector.psycopg import register_vector
 
 from config import configs
 from utils import load_embedding
-from setup import create_answer_table, create_vocaburary_table, insert_embedding
+from db import init_tables, insert_embedding
 
 logger.remove()  # Remove default console handler
 logger.add(
@@ -32,7 +32,6 @@ if __name__ == "__main__":
 
     if args.setup:
         conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
-        create_vocaburary_table(conn, configs.EMB_DIM)
-        create_answer_table(conn)
+        init_tables(conn, configs.EMB_DIM)
         
     insert_embedding(conn, embeddings)
