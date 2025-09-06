@@ -1,0 +1,6 @@
+transformers
+loguru
+tqdm
+
+# Test
+pytest
