@@ -17,25 +17,24 @@ logger.add(
 )
 
 MODEL_NAME = "kakaobank/kf-deberta-base"
-INIT_DATA_PATH = "data/ko-aff-dic-0.7.92/ko.dic"
-SAVE_EMBEDDING_PATH = "data/embedding/init-data"
-SAVE_ITER = 10000
-BATCH_SIZE = 128
 
 if __name__ == "__main__":
     print(f"Using device: {'cuda' if torch.cuda.is_available() else 'cpu'}")
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--init", action="store_true")
+    parser.add_argument("--save_path", type=str, required=True, help="path to save embedding")
+    parser.add_argument("--save_iter", type=int, default=10000, help="step to save embedding")
+    parser.add_argument("--batch_size", type=int, default=128, help="number of samples per batch")
     args = parser.parse_args()
 
     if args.init:
+        INIT_DATA_PATH = "data/ko-aff-dic-0.7.92/ko.dic"
         words = load_init_words(INIT_DATA_PATH)
-        save_path = SAVE_EMBEDDING_PATH
     else:
         pass
 
-    os.makedirs(save_path, exist_ok=True)
+    os.makedirs(args.save_path, exist_ok=True)
     
     model, tokenizer = load_model_and_tokenizer(MODEL_NAME)
     dataset = preprocessing(words, tokenizer)
@@ -43,7 +42,7 @@ if __name__ == "__main__":
         dataset=dataset,
         model=model,
         tokenizer=tokenizer,
-        batch_size=BATCH_SIZE,
-        save_path=save_path,
-        save_iter=SAVE_ITER,
+        batch_size=args.batch_size,
+        save_path=args.save_path,
+        save_iter=args.save_iter,
     )

@@ -13,6 +13,7 @@ class WordDataset(Dataset):
     def __getitem__(self, idx):
         return self.words[idx]
 
+
 def preprocessing(words, tokenizer):
     filtered_words = filter_special_token_word(tokenizer, words)
     # logger.info(f"embedding fail words: {' '.join(set(words) - set(filtered_words))}")

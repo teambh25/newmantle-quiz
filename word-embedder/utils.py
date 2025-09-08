@@ -13,17 +13,27 @@ def load_init_words(path: str) -> List[str]:
         for line in f.readlines():
             word = line.split('/')[0]
             word = unicodedata.normalize('NFC', word)
-            if is_hangul(word):
+            word = word.rstrip("\n")
+            if is_hangul_string(word):
                words.add(word)
     return list(words)
 
 
+def is_hangul_char(ch: str) -> bool:
+        """ function currently returns True only for 가~힣 """
+        code = ord(ch)
+        return 0xAC00 <= code <= 0xD7A3  # 가 ~ 힣
+
+def is_hangul_string(s: str) -> bool:
+    return s != "" and all(is_hangul_char(ch) for ch in s)
+
+
+def has_hangul_string(s: str) -> bool:
+    return s != "" and any(is_hangul_char(ch) for ch in s)
+
+
 def filter_special_token_word(tokenizer, data: List):
     return [word for word in data if not has_speical_token(tokenizer.tokenize(word))]
-
-
-def is_hangul(text: str) -> bool:
-    return bool(re.match(r'^[\uAC00-\uD7A3]+$', text)) # check text are entirely korean (w/o jamo)
 
 
 def has_speical_token(tokens: List[str]) -> bool:
