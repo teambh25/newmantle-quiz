@@ -6,6 +6,9 @@ from loguru import logger
 
 from config import Configs
 
+class InvalidAnswer(BaseException):
+    pass
+
 
 class Quiz:
     def __init__(self, configs: Configs, date: datetime.date, answer: str):
@@ -17,8 +20,13 @@ class Quiz:
     
     def calc_similarity_scores(self, answer) -> Dict[str, float]:
         dists = self.fetch_all_cos_dist(answer)
-        min_dist = min(dists, key=lambda x:x[1])[1]
-        max_dist = max(dists, key=lambda x:x[1])[1]
+        try:
+            min_dist = min(dists, key=lambda x:x[1])[1]
+            max_dist = max(dists, key=lambda x:x[1])[1]
+        except TypeError:
+            e_msg = f"Invalid answer : {answer}"
+            logger.error(e_msg)
+            raise InvalidAnswer(e_msg)
         scores = {
             word: Quiz._scale_to_percentage(dist, min=min_dist, max=max_dist) \
             for word, dist in dists
