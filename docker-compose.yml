@@ -59,5 +59,6 @@ services:
       - ./quiz-register:/src
       - ./logs:/src/logs
     depends_on:
+      - postgres
       - _base_image_build
     command: ["--help"]
