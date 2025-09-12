@@ -1,10 +1,9 @@
-/data/*
+data/
 !/data/.gitkeep
 *.pkl
 *.gz
-*logs/*
+logs/
 !logs/.gitkeep
-proxy/certbot
 *.rdb
 
 # Byte-compiled / optimized / DLL files
