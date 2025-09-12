@@ -14,8 +14,9 @@ def register_quiz(configs: Configs, quiz: Quiz):
             timeout=5
         )
         response.raise_for_status()
-        logger.success("Request succeeded!")
+        logger.success(f"Request to {configs.server_url} succeeded!")
         logger.success(f"Server response: {response.json()}")
+        print(f"register quiz success in {configs.server_url} : {response.json()}")
     except requests.exceptions.HTTPError as err:
         logger.error(f"HTTP error occurred: {err}")
         logger.error(f"Response content: {response.text}")
