@@ -3,7 +3,7 @@ wget https://github.com/spellcheck-ko/hunspell-dict-ko/releases/download/0.7.92/
 unzip data/ko-aff-dic-0.7.92.zip  -d ./data/
 
 # generate embedding
-docker-compose run --rm  word-embedder --init --save_path data/embedding/init-data
+docker-compose run --rm  word-embedder --init # --save_path data/embedding/init-data
 
 # load emebdding
 docker-compose run --rm  data-loader --setup --emb_path data/embedding/init-data

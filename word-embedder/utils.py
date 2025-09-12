@@ -1,5 +1,6 @@
-import re
-import pickle
+import os
+import csv
+
 import unicodedata
 from typing import List, Dict
 
@@ -43,7 +44,20 @@ def has_speical_token(tokens: List[str]) -> bool:
     return False
 
 
-def save_embedding(file_name:str, embedding:Dict[str, np.ndarray]):
-    with open(file_name, 'wb') as pickle_file:
-        pickle.dump(embedding, pickle_file)
-        logger.info(f"{file_name} is saved!!")
+def save_embedding(csv_path:str, embedding:Dict[str, np.ndarray]):
+    try:
+        if os.path.exists(csv_path):
+            raise FileExistsError(f"The file '{csv_path}' already exists.")
+        with open(csv_path, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['word', 'emb'])  # write header
+            for word, vector in embedding.items():
+                vector_string = str(vector.tolist())  # pgvector readable format : "[v1,v2,v3,...]"
+                writer.writerow([word, vector_string])
+        msg = f"Successfully saved {len(embedding)} embeddings to {csv_path}"
+        print(msg)
+        logger.info(msg)
+    except Exception as e:
+        msg =f"Error saving CSV file: {e}"
+        print(msg)
+        logger.error(msg)
