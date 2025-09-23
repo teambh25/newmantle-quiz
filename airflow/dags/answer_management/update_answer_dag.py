@@ -14,6 +14,7 @@ from common.configs import INTERVAL_DAYS
         "date": Param(type="string",title="update date",description="update date in YYYY-MM-DD format"),
         "answer": Param(type="string",title="anwer word",description="hangul word"),
     },
+    tags=["admin", "trigger"],
 )
 def update_answer():
     @task

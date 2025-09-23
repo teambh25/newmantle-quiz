@@ -11,6 +11,7 @@ from common.tasks import get_id_by_word_in_vocab, insert_answer
         "date": Param(type="string",title="update date",description="update date in YYYY-MM-DD format"),
         "answer": Param(type="string",title="anwer word",description="hangul word"),
     },
+    tags=["admin", "trigger"],
 )
 def insert_answer_dag():
     answer = "{{ params.answer }}"

@@ -10,6 +10,7 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
     params={
         "date": Param(type="string",title="update date",description="update date in YYYY-MM-DD format"),
     },
+    tags=["admin", "trigger"],
 )
 def delete_answer():   
     @task

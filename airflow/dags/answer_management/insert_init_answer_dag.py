@@ -26,6 +26,7 @@ init_answers = [
 @dag(
     dag_id="insert_init_answers",
     schedule_interval=None,
+    tags=["init", "trigger"],
 )
 def insert_init_answers():
     for date, answer in init_answers:

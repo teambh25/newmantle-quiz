@@ -12,6 +12,7 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
         "date": Param(type="string",title="start date",description="start date in YYYY-MM-DD format"),
         "days": Param(7, type="integer",title="days",description="number of consecutive days to print"),
     },
+    tags=["admin", "trigger"],
 )
 def print_answers():
     @task
