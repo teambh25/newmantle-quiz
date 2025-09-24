@@ -11,11 +11,11 @@ GEMINI_MODEL = "gemini-2.5-flash"
 # Prompts
 @dataclass(frozen=True)
 class PromptPaths:
-    BASE_DIR = Path("dags/answer_recommendation/prompts")
+    BASE_DIR = Path("dags/common/llm/prompts")
     COMMON_SENSE = BASE_DIR / "extract_common_sense_words.md"
     TREND = BASE_DIR / "extract_trend_words.md"
 
-PROMPT_FILES = PromptPaths()
+PROMPTS = PromptPaths()
 
 # Use Special day 
 SPECIAL_DAY_PROB = 0.5

@@ -1,19 +1,17 @@
 import random
-import logging
 
 from airflow.decorators import dag, task, task_group
 from airflow.exceptions import AirflowException
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from google import genai
-from google.genai import types
 
 import answer_recommendation.candidate_generation as cg
 import common.crud as crud
 import common.configs as configs
 import common.exceptions as exc
+import common.llm.gemini as gemini
+import common.llm.response_schemas as rs
 import common.utils as utils
 
-logging.getLogger("airflow.providers.postgres.hooks.postgres.PostgresHook").setLevel(logging.WARNING)
 
 @dag(
     dag_id="recommend_answer_test",
@@ -25,21 +23,8 @@ def recommend_answer():
     def generate_candidate():        
         @task
         def get_common_sense_words():
-            prompt = utils.load_prompt(configs.PROMPT_FILES.COMMON_SENSE)
-            client = genai.Client(api_key=configs.GEMINI_API_KEY)
-            grounding_tool = types.Tool(
-                google_search=types.GoogleSearch()
-            )
-            config = types.GenerateContentConfig(
-                response_schema=list[cg.AnswerCandidate],
-                tools=[grounding_tool],
-            )
-            resp = client.models.generate_content(
-                model= configs.GEMINI_MODEL,
-                contents=prompt,
-                config=config,
-            )
-            common_sense_words = utils.gemini_resp_to_dict(resp.text)
+            prompt = utils.load_prompt(configs.PROMPTS.COMMON_SENSE)
+            common_sense_words = gemini.generate_text_with_search(prompt, response_schema=list[rs.AnswerCandidate])
             return common_sense_words
 
         @task_group
@@ -51,18 +36,9 @@ def recommend_answer():
             
             @task
             def extract_trend_words(trends: dict):
-                prompt = utils.load_prompt(configs.PROMPT_FILES.TREND)
+                prompt = utils.load_prompt(configs.PROMPTS.TREND)
                 prompt = utils.fill_prompt(prompt, utils.json_to_str(trends))
-                client = genai.Client(api_key=configs.GEMINI_API_KEY)
-                config = types.GenerateContentConfig(
-                    response_schema=list[cg.AnswerCandidate],
-                )
-                resp = client.models.generate_content(
-                    model= configs.GEMINI_MODEL,
-                    contents=prompt,
-                    config=config,
-                )
-                trnends_words = utils.gemini_resp_to_dict(resp.text)
+                trnends_words = gemini.generation_text(prompt, response_schema=list[rs.AnswerCandidate])
                 return trnends_words
             
             trends = get_trends()
@@ -74,6 +50,7 @@ def recommend_answer():
             candidates = common_sense_words + trend_words
             candidates = [x for x in candidates if utils.is_hangul_string(x["word"])]
             random.shuffle(candidates)
+            print(f"#num candidate : {len(candidates)}")
             return candidates
         
         common_sense_words = get_common_sense_words()
@@ -97,11 +74,11 @@ def recommend_answer():
                     ans = base_candidates.pop()
                 else:
                     raise AirflowException("used all candidates")
-                    # use random ans_word_id?
+                    # use random word_id?
                 
                 try:
-                    ans_word_id = crud.get_id_by_word_in_vocab(pg_hook, ans["word"])
-                    crud.upsert_answer(pg_hook, tar_date, ans_word_id)
+                    word_id = crud.get_id_by_word_in_vocab(pg_hook, ans["word"])
+                    crud.upsert_answer(pg_hook, tar_date, word_id, ans["tag"], ans["description"])
                 except exc.NotFoundInDB as e:
                     print(f"[FAIL] There is no {ans["word"]} in vocab")
                 except exc.DuplicateAnswerException as e:

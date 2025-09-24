@@ -9,13 +9,16 @@ CREATE EXTENSION IF NOT EXISTS vector;
 -- create table
 CREATE TABLE IF NOT EXISTS vocabulary (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    word text UNIQUE NOT NULL,
-    emb vector(768) NOT NULL
+    word TEXT UNIQUE NOT NULL,
+    emb VECTOR(768) NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS answer (
     "date" Date PRIMARY KEY,
-    word_id integer REFERENCES vocabulary (id)
+    word_id INTEGER NOT NULL,
+    tag TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    FOREIGN KEY (word_id) REFERENCES vocabulary (id),
 );
 
 -- grant all tables
