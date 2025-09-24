@@ -1,4 +1,5 @@
 from airflow.decorators import dag
+
 from common.tasks import get_id_by_word_in_vocab, insert_answer
 
 init_answers = [

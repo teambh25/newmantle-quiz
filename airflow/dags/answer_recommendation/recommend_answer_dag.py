@@ -1,5 +1,9 @@
 import random
 
+from airflow.decorators import dag, task, task_group
+from airflow.exceptions import AirflowException
+from airflow.providers.postgres.hooks.postgres import PostgresHook
+
 import answer_recommendation.candidate_generation as cg
 import common.configs as configs
 import common.crud as crud
@@ -7,9 +11,6 @@ import common.exceptions as exc
 import common.llm.gemini as gemini
 import common.llm.response_schemas as rs
 import common.utils as utils
-from airflow.decorators import dag, task, task_group
-from airflow.exceptions import AirflowException
-from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 
 @dag(dag_id="recommend_answer_test", schedule_interval=None, tags=["schedule"])

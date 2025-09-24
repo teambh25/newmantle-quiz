@@ -1,4 +1,5 @@
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+
 from common.configs import INTERVAL_DAYS
 from common.exceptions import DuplicateAnswerException
 

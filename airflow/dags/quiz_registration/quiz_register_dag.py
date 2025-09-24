@@ -2,12 +2,13 @@ import json
 import os
 import tempfile
 
-import common.utils as utils
 from airflow.decorators import dag, task
 from airflow.exceptions import AirflowException
 from airflow.models.param import Param
 from airflow.providers.http.hooks.http import HttpHook
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+
+import common.utils as utils
 
 
 @dag(

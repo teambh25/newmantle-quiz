@@ -1,6 +1,7 @@
 from airflow.decorators import task
 from airflow.exceptions import AirflowException
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+
 from common.configs import INTERVAL_DAYS
 
 
