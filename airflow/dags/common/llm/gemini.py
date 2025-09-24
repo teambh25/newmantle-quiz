@@ -34,12 +34,15 @@ def generate_text_with_search(prompt: str, response_schema) -> dict:
 
 
 if __name__ == "__main__":
+    import answer_recommendation.candidate_generation as cg
     import common.llm.response_schemas as rs
 
-    PROMPT_PATH = "common/llm/prompts/common_sense_word_in_news.md"
+    PROMPT_PATH = "common/llm/prompts/daily_words.md"
 
-    prompt = utils.load_prompt(PROMPT_PATH)
-    common_sense_words = generate_text_with_search(
-        prompt, response_schema=list[rs.AnswerCandidate]
-    )
-    print(common_sense_words)
+    prompt = utils.load_and_fill_prompt(PROMPT_PATH, cg.get_korean_season("2025-09-25"))
+    # resp = generation_text(
+    #     prompt, response_schema=list[rs.AnswerCandidate]
+    # )
+    resp = generate_text_with_search(prompt, response_schema=list[rs.AnswerCandidate])
+    print(resp)
+    # print(prompt)

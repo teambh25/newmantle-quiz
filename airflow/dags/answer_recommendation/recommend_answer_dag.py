@@ -17,14 +17,6 @@ import common.utils as utils
 def recommend_answer():
     @task_group
     def generate_candidate():
-        @task
-        def get_common_sense_words():
-            prompt = utils.load_prompt(configs.PROMPTS.COMMON_SENSE)
-            common_sense_words = gemini.generate_text_with_search(
-                prompt, response_schema=list[rs.AnswerCandidate]
-            )
-            return common_sense_words
-
         @task_group
         def get_trends_words():
             @task
@@ -36,8 +28,9 @@ def recommend_answer():
 
             @task
             def extract_trend_words(trends: dict):
-                prompt = utils.load_prompt(configs.PROMPTS.TREND)
-                prompt = utils.fill_prompt(prompt, utils.json_to_str(trends))
+                prompt = utils.load_and_fill_prompt(
+                    configs.PROMPTS.TREND, fill_data=utils.json_to_str(trends)
+                )
                 trnends_words = gemini.generation_text(
                     prompt, response_schema=list[rs.AnswerCandidate]
                 )
@@ -48,20 +41,43 @@ def recommend_answer():
             return trend_words
 
         @task
-        def merge_and_filter_words(common_sense_words: list, trend_words: list):
-            candidates = common_sense_words + trend_words
+        def get_common_sense_words():
+            prompt = utils.load_and_fill_prompt(configs.PROMPTS.COMMON_SENSE)
+            common_sense_words = gemini.generate_text_with_search(
+                prompt, response_schema=list[rs.AnswerCandidate]
+            )
+            return common_sense_words
+
+        @task
+        def get_daily_words():
+            prompt = utils.load_and_fill_prompt(
+                configs.PROMPTS.DAILY, fill_data=cg.get_korean_season(START_DATE)
+            )
+            daily_words = gemini.generate_text_with_search(
+                prompt, response_schema=list[rs.AnswerCandidate]
+            )
+            return daily_words
+
+        @task
+        def merge_and_filter_words(
+            trend_words: list, common_sense_words: list, daily_words: list
+        ):
+            candidates = trend_words + common_sense_words + daily_words
             candidates = [x for x in candidates if utils.is_hangul_string(x["word"])]
             random.shuffle(candidates)
             print(f"#num candidate : {len(candidates)}")
             return candidates
 
-        common_sense_words = get_common_sense_words()
         trend_words = get_trends_words()
-        candidates = merge_and_filter_words(common_sense_words, trend_words)
+        common_sense_words = get_common_sense_words()
+        daily_words = get_daily_words()
+        candidates = merge_and_filter_words(
+            trend_words, common_sense_words, daily_words
+        )
         return candidates
 
     @task
-    def rec_n_days_answer(start_date: str, days: int, base_candidates: list):
+    def rec_n_days_answer(base_candidates: list, start_date: str, days: int):
         for d in range(days):
             tar_date = utils.add_days(start_date, d)
             special_candidates = cg.get_special_day_candidate(tar_date)
@@ -92,9 +108,9 @@ def recommend_answer():
                     print(f"SUCCESS : {tar_date} - {ans}")
                     break
 
-    START_DATE = "2025-09-25"
+    START_DATE = "2025-09-26"
     candidates = generate_candidate()
-    rec_n_days_answer(START_DATE, 2, candidates)
+    rec_n_days_answer(candidates, START_DATE, 7)
 
 
 recommend_answer()

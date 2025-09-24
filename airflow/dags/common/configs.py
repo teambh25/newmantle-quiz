@@ -15,6 +15,7 @@ class PromptPaths:
     BASE_DIR = Path("dags/common/llm/prompts")
     COMMON_SENSE = BASE_DIR / "news_common_sense_words.md"
     TREND = BASE_DIR / "search_trend_words.md"
+    DAILY = BASE_DIR / "daily_words.md"
 
 
 PROMPTS = PromptPaths()

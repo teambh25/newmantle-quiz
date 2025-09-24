@@ -11,10 +11,6 @@ def add_days(date_str: str, days: int) -> str:
     return next_day.strftime("%Y-%m-%d")
 
 
-def fill_prompt(template: str, data: str) -> str:
-    return template.replace("{{ data }}", data)
-
-
 def gemini_resp_to_dict(resp: str):
     match = re.search(r"```json\s*(.*?)\s*```", resp, re.DOTALL)
     if not match:
@@ -42,9 +38,15 @@ def json_to_str(items: list) -> str:
     return json.dumps(items, ensure_ascii=False, indent=2)
 
 
-def load_prompt(path: Path) -> str:
+def load_and_fill_prompt(path: Path, fill_data: str = None) -> str:
+    """
+    load prompt and fill {{ data }} in prompt
+    """
     with open(path, "r", encoding="utf-8") as f:
-        return f.read()
+        prompt = f.read()
+    if fill_data is not None:
+        prompt = prompt.replace("{{ data }}", fill_data)
+    return prompt
 
 
 def scaler_factory(min_dist: float):
