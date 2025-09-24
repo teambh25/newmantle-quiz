@@ -10,8 +10,12 @@ from common.tasks import get_id_by_word_in_vocab
     dag_id="update_answer",
     schedule_interval=None,
     params={
-        "date": Param(type="string",title="update date",description="update date in YYYY-MM-DD format"),
-        "answer": Param(type="string",title="anwer word",description="hangul word"),
+        "date": Param(
+            type="string",
+            title="update date",
+            description="update date in YYYY-MM-DD format",
+        ),
+        "answer": Param(type="string", title="anwer word", description="hangul word"),
     },
     tags=["admin", "trigger"],
 )
@@ -19,7 +23,6 @@ def update_answer():
     @task
     def get_params(params: dict) -> dict:
         return params
-    
 
     @task
     def update_answer(date: str, ans_id: int):
@@ -38,16 +41,22 @@ def update_answer():
             )
             RETURNING *;
             """,
-            parameters={"date": f"{date}", "word_id": ans_id, "interval_days": f"{INTERVAL_DAYS} days"}
+            parameters={
+                "date": f"{date}",
+                "word_id": ans_id,
+                "interval_days": f"{INTERVAL_DAYS} days",
+            },
         )
         if updated_row:
             print(f"update answer : {updated_row}")
         else:
-            raise AirflowException(f"There is duplicated answer between {INTERVAL_DAYS} days")
-        
-    
+            raise AirflowException(
+                f"There is duplicated answer between {INTERVAL_DAYS} days"
+            )
+
     params = get_params()
     ans_id = get_id_by_word_in_vocab(params["answer"])
     update_answer(params["date"], ans_id)
+
 
 update_answer()

@@ -5,8 +5,9 @@ from pathlib import Path
 INTERVAL_DAYS = 90
 
 # LLM config
-GEMINI_API_KEY=os.environ.get("GEMINI_API_KEY")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 GEMINI_MODEL = "gemini-2.5-flash"
+
 
 # Prompts
 @dataclass(frozen=True)
@@ -15,7 +16,8 @@ class PromptPaths:
     COMMON_SENSE = BASE_DIR / "extract_common_sense_words.md"
     TREND = BASE_DIR / "extract_trend_words.md"
 
+
 PROMPTS = PromptPaths()
 
-# Use Special day 
+# Use Special day
 SPECIAL_DAY_PROB = 0.5

@@ -3,7 +3,9 @@ from common.configs import INTERVAL_DAYS
 from common.exceptions import DuplicateAnswerException
 
 
-def upsert_answer(pg_hook: PostgresHook, date: str, word_id: int, tag: str, description: str):
+def upsert_answer(
+    pg_hook: PostgresHook, date: str, word_id: int, tag: str, description: str
+):
     upserted_row = pg_hook.get_first(
         sql="""
             INSERT INTO answer (date, word_id, tag, description)
@@ -28,7 +30,7 @@ def upsert_answer(pg_hook: PostgresHook, date: str, word_id: int, tag: str, desc
             "tag": tag,
             "description": description,
             "interval_days": f"{INTERVAL_DAYS} days",
-        }
+        },
     )
     if not upserted_row:
         raise DuplicateAnswerException("There is duplicated answer")

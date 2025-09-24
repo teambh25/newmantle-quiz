@@ -35,9 +35,15 @@ def insert_answer(date: str, ans_id: int):
         )
         RETURNING *;
         """,
-        parameters={"date": date, "word_id": ans_id, "interval_days": f"{INTERVAL_DAYS} days"}
+        parameters={
+            "date": date,
+            "word_id": ans_id,
+            "interval_days": f"{INTERVAL_DAYS} days",
+        },
     )
     if inserted_row:
         print(f"insert answer : {inserted_row}")
     else:
-        raise AirflowException(f"There is duplicated answer between {INTERVAL_DAYS} days")
+        raise AirflowException(
+            f"There is duplicated answer between {INTERVAL_DAYS} days"
+        )

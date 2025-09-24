@@ -22,9 +22,17 @@ class SpecialDay(Enum):
     성탄절 = auto()
     개천절 = auto()
 
+
 SPECIALDAY_WORDS = {
     SpecialDay.신정: ("새해", "해돋이", "새해소망", "캘린더", "연초", "복", "축하"),
-    SpecialDay.정월대보름: ("달맞이", "부럼", "오곡밥", "보름달", "귀밝이술", "쥐불놀이"),
+    SpecialDay.정월대보름: (
+        "달맞이",
+        "부럼",
+        "오곡밥",
+        "보름달",
+        "귀밝이술",
+        "쥐불놀이",
+    ),
     SpecialDay.설날: ("떡국", "세배", "복주머니", "연", "한복", "차례", "윷놀이"),
     SpecialDay.삼일절: ("태극기", "독립", "기념식", "만세", "역사", "선열"),
     SpecialDay.어린이날: ("선물", "놀이터", "풍선", "사탕", "놀이공원", "인형"),
@@ -60,7 +68,6 @@ SPECIALDAY_BY_DATE = {
     "2025-10-06": SpecialDay.추석,
     "2025-10-09": SpecialDay.한글날,
     "2025-12-25": SpecialDay.성탄절,
-
     # --- 2026년 ---
     "2026-01-01": SpecialDay.신정,
     "2026-02-01": SpecialDay.정월대보름,
@@ -78,7 +85,6 @@ SPECIALDAY_BY_DATE = {
     "2026-10-03": SpecialDay.개천절,
     "2026-10-09": SpecialDay.한글날,
     "2026-12-25": SpecialDay.성탄절,
-
     # --- 2027년 ---
     "2027-01-01": SpecialDay.신정,
     "2027-01-21": SpecialDay.정월대보름,
@@ -103,13 +109,9 @@ def get_special_day_candidate(date_str: str) -> Optional[Tuple[str]]:
     special_day = SPECIALDAY_BY_DATE.get(date_str)
     if special_day is None:
         return None
-    words =SPECIALDAY_WORDS[special_day]
+    words = SPECIALDAY_WORDS[special_day]
     candidates = [
-        {
-            "word": w,
-            "tag": "기념일",
-            "description": f"오늘은 {special_day.name}입니다."
-        }
+        {"word": w, "tag": "기념일", "description": f"오늘은 {special_day.name}입니다."}
         for w in words
     ]
     random.shuffle(candidates)

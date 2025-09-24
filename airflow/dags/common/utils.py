@@ -20,8 +20,8 @@ def gemini_resp_to_dict(resp: str):
     if not match:
         raise ValueError("Can't find Json", resp)
     json_str = match.group(1).strip()
-    
-    try:    
+
+    try:
         data = json.loads(json_str)
     except json.JSONDecodeError:
         raise ValueError("Fail to parsing json", resp)
@@ -29,7 +29,7 @@ def gemini_resp_to_dict(resp: str):
 
 
 def is_hangul_char(ch: str) -> bool:
-    """ function currently returns True only for 가~힣 """
+    """function currently returns True only for 가~힣"""
     code = ord(ch)
     return 0xAC00 <= code <= 0xD7A3  # 가 ~ 힣
 
@@ -49,12 +49,13 @@ def load_prompt(path: Path) -> str:
 
 def scaler_factory(min_dist: float):
     def scaler(x: float) -> float:
-        '''
+        """
         1. Min-Max Scaling: scale x from range [min_dist, max_dist] to [0, 1]
         2. Convert the [0, 1] range to [0, 100]
-        '''
+        """
         x = (x - min_dist) / (1 - min_dist)  # max_dist = 1 (answer)
-        return round(x* 100, 2)
+        return round(x * 100, 2)
+
     return scaler
 
 

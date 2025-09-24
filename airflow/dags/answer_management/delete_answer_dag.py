@@ -8,11 +8,15 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
     dag_id="delete_answer",
     schedule_interval=None,
     params={
-        "date": Param(type="string",title="update date",description="update date in YYYY-MM-DD format"),
+        "date": Param(
+            type="string",
+            title="update date",
+            description="update date in YYYY-MM-DD format",
+        ),
     },
     tags=["admin", "trigger"],
 )
-def delete_answer():   
+def delete_answer():
     @task
     def delete_answer(params: dict):
         pg_hook = PostgresHook(postgres_conn_id="quiz_db")
@@ -23,12 +27,14 @@ def delete_answer():
             WHERE date = %(date)s
             RETURNING *;
             """,
-            parameters={"date": params["date"]}
+            parameters={"date": params["date"]},
         )
         if deleted_row:
             print(f"delete answer : {deleted_row}")
         else:
-            raise AirflowException(f"There is no answer on {params["date"]}")
+            raise AirflowException(f"There is no answer on {params['date']}")
+
     delete_answer()
+
 
 delete_answer()

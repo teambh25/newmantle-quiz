@@ -3,8 +3,10 @@ class BaseException(Exception):
         self.msg = msg
         super().__init__(msg)
 
+
 class DuplicateAnswerException(BaseException):
     pass
+
 
 class NotFoundInDB(BaseException):
     pass

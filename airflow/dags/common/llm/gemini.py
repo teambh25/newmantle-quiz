@@ -10,7 +10,7 @@ def generation_text(prompt: str, response_schema) -> dict:
         response_schema=response_schema,
     )
     resp = client.models.generate_content(
-        model= configs.GEMINI_MODEL,
+        model=configs.GEMINI_MODEL,
         contents=prompt,
         config=config,
     )
@@ -19,15 +19,13 @@ def generation_text(prompt: str, response_schema) -> dict:
 
 def generate_text_with_search(prompt: str, response_schema) -> dict:
     client = genai.Client(api_key=configs.GEMINI_API_KEY)
-    grounding_tool = types.Tool(
-        google_search=types.GoogleSearch()
-    )
+    grounding_tool = types.Tool(google_search=types.GoogleSearch())
     config = types.GenerateContentConfig(
         response_schema=response_schema,
         tools=[grounding_tool],
     )
     resp = client.models.generate_content(
-        model= configs.GEMINI_MODEL,
+        model=configs.GEMINI_MODEL,
         contents=prompt,
         config=config,
     )

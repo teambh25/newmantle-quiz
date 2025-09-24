@@ -32,4 +32,5 @@ def insert_init_answers():
         ans_id = get_id_by_word_in_vocab(answer)
         insert_answer(date, ans_id)
 
+
 insert_init_answers()
