@@ -13,8 +13,8 @@ GEMINI_MODEL = "gemini-2.5-flash"
 @dataclass(frozen=True)
 class PromptPaths:
     BASE_DIR = Path("dags/common/llm/prompts")
-    COMMON_SENSE = BASE_DIR / "extract_common_sense_words.md"
-    TREND = BASE_DIR / "extract_trend_words.md"
+    COMMON_SENSE = BASE_DIR / "news_common_sense_words.md"
+    TREND = BASE_DIR / "search_trend_words.md"
 
 
 PROMPTS = PromptPaths()
