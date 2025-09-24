@@ -1,5 +1,4 @@
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-
 from common.configs import INTERVAL_DAYS
 from common.exceptions import DuplicateAnswerException
 
@@ -32,7 +31,7 @@ def upsert_answer(pg_hook: PostgresHook, date: str, word_id: int, tag: str, desc
         }
     )
     if not upserted_row:
-        raise DuplicateAnswerException(f"There is duplicated answer between {INTERVAL_DAYS} days")    
+        raise DuplicateAnswerException("There is duplicated answer")
 
 
 if __name__ == "__main__":

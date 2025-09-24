@@ -1,5 +1,5 @@
-from enum import Enum, auto
 import random
+from enum import Enum, auto
 from typing import Optional, Tuple
 
 
@@ -22,7 +22,7 @@ class SpecialDay(Enum):
     성탄절 = auto()
     개천절 = auto()
 
-_SPECIALDAY_WORDS = {
+SPECIALDAY_WORDS = {
     SpecialDay.신정: ("새해", "해돋이", "새해소망", "캘린더", "연초", "복", "축하"),
     SpecialDay.정월대보름: ("달맞이", "부럼", "오곡밥", "보름달", "귀밝이술", "쥐불놀이"),
     SpecialDay.설날: ("떡국", "세배", "복주머니", "연", "한복", "차례", "윷놀이"),
@@ -42,7 +42,7 @@ _SPECIALDAY_WORDS = {
     SpecialDay.개천절: ("단군", "국경일", "기념식", "역사", "축제", "민족"),
 }
 
-_SPECIALDAY_BY_DATE = {
+SPECIALDAY_BY_DATE = {
     # --- 2025년 ---
     "2025-01-01": SpecialDay.신정,
     "2025-01-13": SpecialDay.정월대보름,
@@ -100,10 +100,10 @@ _SPECIALDAY_BY_DATE = {
 
 
 def get_special_day_candidate(date_str: str) -> Optional[Tuple[str]]:
-    special_day = _SPECIALDAY_BY_DATE.get(date_str)
+    special_day = SPECIALDAY_BY_DATE.get(date_str)
     if special_day is None:
         return None
-    words =_SPECIALDAY_WORDS[special_day]
+    words =SPECIALDAY_WORDS[special_day]
     candidates = [
         {
             "word": w,

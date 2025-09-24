@@ -1,8 +1,8 @@
-from datetime import datetime, timedelta
 import json
-from pathlib import Path
-import re
 import random
+import re
+from datetime import datetime, timedelta
+from pathlib import Path
 
 
 def add_days(date_str: str, days: int) -> str:
@@ -23,8 +23,8 @@ def gemini_resp_to_dict(resp: str):
     
     try:    
         data = json.loads(json_str)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Fail to parsing json", resp)
+    except json.JSONDecodeError:
+        raise ValueError("Fail to parsing json", resp)
     return data
 
 
@@ -45,6 +45,17 @@ def json_to_str(items: list) -> str:
 def load_prompt(path: Path) -> str:
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+
+
+def scaler_factory(min_dist: float):
+    def scaler(x: float) -> float:
+        '''
+        1. Min-Max Scaling: scale x from range [min_dist, max_dist] to [0, 1]
+        2. Convert the [0, 1] range to [0, 100]
+        '''
+        x = (x - min_dist) / (1 - min_dist)  # max_dist = 1 (answer)
+        return round(x* 100, 2)
+    return scaler
 
 
 def with_prob(prob: float):

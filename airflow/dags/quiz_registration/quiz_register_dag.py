@@ -1,8 +1,8 @@
-import os
 import json
+import os
 import tempfile
-from datetime import datetime, timedelta
 
+import common.utils as utils
 from airflow.decorators import dag, task
 from airflow.exceptions import AirflowException
 from airflow.models.param import Param
@@ -19,7 +19,6 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
     tags=["admin", "trigger"]
 )
 def quiz_register():
-
     @task
     def get_answer_by_date(params: dict) -> str:
         date = params["date"]
@@ -38,8 +37,7 @@ def quiz_register():
         )
         if ans is None:
             raise AirflowException(f"There is no {date}'s answer")
-        return ans[0]
-
+        return ans[0]        
 
     @task
     def generate_quiz_and_save(ans: str, params: dict):
@@ -55,12 +53,12 @@ def quiz_register():
         )
 
         min_dist = min(dists, key=lambda x:x[1])[1]
-        scale_to_percentage = lambda x: round((x-min_dist) / (1 - min_dist) * 100, 2)  # answer is dist 1
-        scores = {word: scale_to_percentage(dist) for word, dist in dists}
+        sclaer = utils.scaler_factory(min_dist=min_dist)
+        scores = {word: sclaer(dist) for word, dist in dists}
         print(f"#words : {len(scores)}")
         quiz = {"date": date, "answer": ans, "scores": scores}
 
-        with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix=f"quiz_", suffix=".json") as quiz_file:
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix="quiz_", suffix=".json") as quiz_file:
             json.dump(quiz, quiz_file)
             print("save quiz file!")
         return quiz_file.name

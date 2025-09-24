@@ -1,6 +1,5 @@
-from airflow.decorators import dag 
+from airflow.decorators import dag
 from airflow.models.param import Param
-
 from common.tasks import get_id_by_word_in_vocab, insert_answer
 
 

@@ -1,8 +1,7 @@
-from google import genai
-from google.genai import types
-
 import common.configs as configs
 import common.utils as utils
+from google import genai
+from google.genai import types
 
 
 def generation_text(prompt: str, response_schema) -> dict:

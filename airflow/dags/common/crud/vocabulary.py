@@ -1,5 +1,4 @@
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-
 from common.exceptions import NotFoundInDB
 
 

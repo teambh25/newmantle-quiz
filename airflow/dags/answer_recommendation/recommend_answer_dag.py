@@ -1,16 +1,15 @@
 import random
 
-from airflow.decorators import dag, task, task_group
-from airflow.exceptions import AirflowException
-from airflow.providers.postgres.hooks.postgres import PostgresHook
-
 import answer_recommendation.candidate_generation as cg
-import common.crud as crud
 import common.configs as configs
+import common.crud as crud
 import common.exceptions as exc
 import common.llm.gemini as gemini
 import common.llm.response_schemas as rs
 import common.utils as utils
+from airflow.decorators import dag, task, task_group
+from airflow.exceptions import AirflowException
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 
 @dag(
@@ -80,11 +79,11 @@ def recommend_answer():
                     word_id = crud.get_id_by_word_in_vocab(pg_hook, ans["word"])
                     crud.upsert_answer(pg_hook, tar_date, word_id, ans["tag"], ans["description"])
                 except exc.NotFoundInDB as e:
-                    print(f"[FAIL] There is no {ans["word"]} in vocab")
+                    print(f"FAIL {ans["word"]} : {e.msg}")
                 except exc.DuplicateAnswerException as e:
-                    print(f"[FAIL] {ans["word"]} is duplicated")
+                    print(f"FAIL {ans["word"]} : {e.msg}")
                 else:
-                    print(f"[SUCCESS] {tar_date} : {ans}")
+                    print(f"SUCCESS : {tar_date} - {ans}")
                     break
     
     START_DATE = "2025-09-25"

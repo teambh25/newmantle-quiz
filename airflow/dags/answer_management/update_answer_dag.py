@@ -2,9 +2,8 @@ from airflow.decorators import dag, task
 from airflow.exceptions import AirflowException
 from airflow.models.param import Param
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-
-from common.tasks import get_id_by_word_in_vocab
 from common.configs import INTERVAL_DAYS
+from common.tasks import get_id_by_word_in_vocab
 
 
 @dag(
