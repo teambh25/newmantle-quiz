@@ -1,12 +1,15 @@
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 from common.configs import INTERVAL_DAYS
-from common.exceptions import DuplicateAnswerException
-
+import common.exceptions as exc
+import common.utils as utils
 
 def upsert_answer(
     pg_hook: PostgresHook, date: str, word_id: int, tag: str, description: str
 ):
+    '''
+    Check for duplicate past answers only (exclude future answers)
+    '''
     upserted_row = pg_hook.get_first(
         sql="""
             INSERT INTO answer (date, word_id, tag, description)
@@ -15,8 +18,8 @@ def upsert_answer(
                 SELECT 1
                 FROM answer
                 WHERE word_id = %(word_id)s
-                AND date != %(date)s
-                AND date BETWEEN NOW() - INTERVAL %(interval_days)s AND NOW() + INTERVAL %(interval_days)s 
+                AND date >= %(window_start)s
+                AND date < %(date)s
             )
             ON CONFLICT (date) DO UPDATE
             SET 
@@ -30,14 +33,14 @@ def upsert_answer(
             "word_id": word_id,
             "tag": tag,
             "description": description,
-            "interval_days": f"{INTERVAL_DAYS} days",
+            "window_start": utils.subtract_days(date, INTERVAL_DAYS),
         },
     )
     if not upserted_row:
-        raise DuplicateAnswerException("There is duplicated answer")
+        raise exc.DuplicateAnswerException("There is duplicated answer")
 
 
 if __name__ == "__main__":
     # for test
     pg_hook = PostgresHook(postgres_conn_id="quiz_db")
-    upsert_answer(pg_hook, "2025-09-25", 456, "태2", "아무2")
+    upsert_answer(pg_hook, "2025-09-28", 457, "random", "...")

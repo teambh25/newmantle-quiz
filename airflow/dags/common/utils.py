@@ -63,3 +63,10 @@ def scaler_factory(min_dist: float):
 
 def with_prob(prob: float):
     return random.random() < prob
+
+
+
+def subtract_days(date_str: str, days) -> str:
+    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    new_date = date_obj - timedelta(days=90)
+    return new_date.strftime("%Y-%m-%d")
