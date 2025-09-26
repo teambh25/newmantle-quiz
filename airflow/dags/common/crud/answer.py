@@ -1,8 +1,31 @@
+from typing import Tuple
+
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
-from common.configs import INTERVAL_DAYS
 import common.exceptions as exc
 import common.utils as utils
+from common.configs import INTERVAL_DAYS
+
+
+def fetch_answer_by_date(
+        pg_hook: PostgresHook, date: str
+)-> Tuple[str, str, str, str]:  
+    ans = pg_hook.get_first(
+        sql="""
+            SELECT 
+                a.word_id,
+                (SELECT word FROM vocabulary WHERE id = a.word_id) AS word,
+                a.tag,
+                a.description
+            FROM answer a
+            WHERE a.date = %(date)s;
+        """,
+        parameters={"date": date},
+    )
+    if ans is None:
+        raise exc.NotFoundInDB(f"No data found for {date} in 'answer' table")
+    return ans
+    
 
 def upsert_answer(
     pg_hook: PostgresHook, date: str, word_id: int, tag: str, description: str
@@ -43,4 +66,5 @@ def upsert_answer(
 if __name__ == "__main__":
     # for test
     pg_hook = PostgresHook(postgres_conn_id="quiz_db")
-    upsert_answer(pg_hook, "2025-09-28", 457, "random", "...")
+    ans = fetch_answer_by_date(pg_hook, "2025-09-27")
+    print(ans)

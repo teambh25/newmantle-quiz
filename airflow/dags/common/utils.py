@@ -49,24 +49,11 @@ def load_and_fill_prompt(path: Path, fill_data: str = None) -> str:
     return prompt
 
 
-def scaler_factory(min_dist: float):
-    def scaler(x: float) -> float:
-        """
-        1. Min-Max Scaling: scale x from range [min_dist, max_dist] to [0, 1]
-        2. Convert the [0, 1] range to [0, 100]
-        """
-        x = (x - min_dist) / (1 - min_dist)  # max_dist = 1 (answer)
-        return round(x * 100, 2)
-
-    return scaler
-
-
 def with_prob(prob: float):
     return random.random() < prob
 
 
-
-def subtract_days(date_str: str, days) -> str:
+def subtract_days(date_str: str, days: int) -> str:
     date_obj = datetime.strptime(date_str, "%Y-%m-%d")
     new_date = date_obj - timedelta(days=90)
     return new_date.strftime("%Y-%m-%d")
