@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-# Answer/Quiz 
+# Answer/Quiz
 INTERVAL_DAYS = 90
 BATCH_SIZE = 7
 

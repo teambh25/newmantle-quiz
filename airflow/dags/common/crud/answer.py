@@ -7,9 +7,7 @@ import common.utils as utils
 from common.configs import INTERVAL_DAYS
 
 
-def fetch_answer_by_date(
-        pg_hook: PostgresHook, date: str
-)-> Tuple[str, str, str, str]:  
+def fetch_answer_by_date(pg_hook: PostgresHook, date: str) -> Tuple[str, str, str, str]:
     ans = pg_hook.get_first(
         sql="""
             SELECT 
@@ -25,14 +23,14 @@ def fetch_answer_by_date(
     if ans is None:
         raise exc.NotFoundInDB(f"No data found for {date} in 'answer' table")
     return ans
-    
+
 
 def upsert_answer(
     pg_hook: PostgresHook, date: str, word_id: int, tag: str, description: str
 ):
-    '''
+    """
     Check for duplicate past answers only (exclude future answers)
-    '''
+    """
     upserted_row = pg_hook.get_first(
         sql="""
             INSERT INTO answer (date, word_id, tag, description)

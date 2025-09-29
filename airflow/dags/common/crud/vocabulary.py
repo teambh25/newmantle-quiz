@@ -5,13 +5,13 @@ from common.exceptions import NotFoundInDB
 
 def calc_cos_dists(pg_hook: PostgresHook, word_id: str) -> tuple:
     dists = pg_hook.get_records(
-            sql="""
+        sql="""
                 SELECT word, 1 - (emb <=> (SELECT emb FROM vocabulary WHERE id=%(word_id)s)) as dist
                 FROM vocabulary
                 WHERE id != %(word_id)s
                 """,
-            parameters={"word_id": word_id},
-        )
+        parameters={"word_id": word_id},
+    )
     return dists
 
 
