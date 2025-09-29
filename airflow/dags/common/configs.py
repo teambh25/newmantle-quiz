@@ -2,7 +2,9 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+# Answer/Quiz 
 INTERVAL_DAYS = 90
+BATCH_SIZE = 7
 
 # LLM config
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")

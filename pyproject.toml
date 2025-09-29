@@ -2,4 +2,4 @@
 extend-select = ["I"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["answer_recommendation", "common"]
+known-first-party = ["answer_recommendation", "common", "quiz_pipeline"]
