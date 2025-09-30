@@ -31,4 +31,4 @@ def get_id_by_word_in_vocab(pg_hook: PostgresHook, word: str) -> int:
 
 if __name__ == "__main__":
     pg_hook = PostgresHook(postgres_conn_id="quiz_db")
-    print(calc_cos_dists(pg_hook, 36911))
+    print(get_id_by_word_in_vocab(pg_hook, "롤백"))

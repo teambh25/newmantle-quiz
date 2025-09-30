@@ -1,13 +1,16 @@
-from datetime import datetime, timedelta
+from pprint import pprint
 
 from airflow.decorators import dag, task
 from airflow.models.param import Param
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
+import common.crud as crud
+import common.utils as utils
+
 
 @dag(
     dag_id="print_answers",
-    schedule_interval=None,
+    schedule=None,
     params={
         "date": Param(
             type="string",
@@ -15,31 +18,23 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
             description="start date in YYYY-MM-DD format",
         ),
         "days": Param(
-            7,
             type="integer",
             title="days",
             description="number of consecutive days to print",
+            default=7,
         ),
     },
-    tags=["admin", "trigger"],
+    tags=["admin"],
 )
 def print_answers():
     @task
     def print_anwers(params: dict):
-        start_date = datetime.strptime(params["date"], "%Y-%m-%d").date()
-        end_date = start_date + timedelta(days=params["days"] - 1)
+        start_date = params["date"]
+        end_date = utils.add_days(start_date, params["days"] - 1)
 
         pg_hook = PostgresHook(postgres_conn_id="quiz_db")
-        answers = pg_hook.get_records(
-            sql="""
-            SELECT a.date, v.word, v.id
-            FROM answer a
-            INNER JOIN vocabulary v ON a.word_id = v.id
-            WHERE a.date BETWEEN %(start_date)s AND %(end_date)s
-            """,
-            parameters={"start_date": start_date, "end_date": end_date},
-        )
-        print(answers)
+        answers = crud.fetch_answer_details(pg_hook, start_date, end_date)
+        pprint(answers)
 
     print_anwers()
 
