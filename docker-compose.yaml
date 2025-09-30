@@ -91,6 +91,7 @@ services:
         /entrypoint airflow config list >/dev/null
         chown -R "${AIRFLOW_UID}:0" /opt/airflow/
         chown -v -R "${AIRFLOW_UID}:0" /opt/airflow/{logs,dags,plugins,config}
+        airflow pools import /opt/airflow/config/pools.json
     environment:
       <<: *airflow-common-env
       _AIRFLOW_DB_MIGRATE: 'true'

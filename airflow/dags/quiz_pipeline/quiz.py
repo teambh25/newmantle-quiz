@@ -1,10 +1,15 @@
-import json
-import tempfile
 from typing import Dict, List, Tuple
 
 
 class Quiz:
-    def __init__(self, date: str, word: str, tag: str, description: str, dists: List[Tuple[str, float]]):
+    def __init__(
+        self,
+        date: str,
+        word: str,
+        tag: str,
+        description: str,
+        dists: List[Tuple[str, float]],
+    ):
         self.date = date
         self.answer = word
         self.tag = tag
@@ -37,12 +42,3 @@ class Quiz:
             # "description": self.description,
             "scores": self.scores,
         }
-
-    def save(self) -> str:
-        """Save quiz as JSON to a temporary file. Returns file path."""
-        with tempfile.NamedTemporaryFile(
-            mode="w", delete=False, prefix="quiz_", suffix=".json"
-        ) as quiz_file:
-            json.dump(self.to_dict(), quiz_file)
-            print(f"Saved quiz file : {quiz_file.name}")
-            return quiz_file.name

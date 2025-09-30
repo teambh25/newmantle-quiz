@@ -2,14 +2,15 @@ import random
 from pprint import pprint
 
 import pendulum
+from airflow.datasets.metadata import Metadata
 from airflow.decorators import dag, task, task_group
 from airflow.exceptions import AirflowException
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 import answer_recommendation.candidate_generation as cg
 import common.configs as configs
 import common.crud as crud
+import common.datasets as datasets
 import common.exceptions as exc
 import common.llm.gemini as gemini
 import common.llm.response_schemas as rs
@@ -20,7 +21,8 @@ import common.utils as utils
     dag_id="recommend_answer",
     # start_date=pendulum.datetime(2025, 9, 26 tz="Asia/Seoul"),
     # schedule="0 17 * * 0,3,5"  # every sun, wed, fri at 5pm
-    tags=["schedule"]
+    catchup=False,
+    tags=["schedule"],
 )
 def recommend_answer():
     @task
@@ -44,7 +46,7 @@ def recommend_answer():
                     configs.PROMPTS.TREND, fill_data=utils.json_to_str(trends)
                 )
                 trnends_words = gemini.generation_text(
-                    prompt, response_schema=list[rs.AnswerCandidate], temperature= 2.0
+                    prompt, response_schema=list[rs.AnswerCandidate], temperature=2.0
                 )
                 return trnends_words
 
@@ -56,7 +58,7 @@ def recommend_answer():
         def get_common_sense_words():
             prompt = utils.load_and_fill_prompt(configs.PROMPTS.COMMON_SENSE)
             common_sense_words = gemini.generate_text_with_search(
-                prompt, response_schema=list[rs.AnswerCandidate], temperature= 2.0
+                prompt, response_schema=list[rs.AnswerCandidate], temperature=2.0
             )
             return common_sense_words
 
@@ -66,7 +68,7 @@ def recommend_answer():
                 configs.PROMPTS.DAILY, fill_data=cg.get_korean_season(start_date)
             )
             daily_words = gemini.generate_text_with_search(
-                prompt, response_schema=list[rs.AnswerCandidate], temperature= 2.0
+                prompt, response_schema=list[rs.AnswerCandidate], temperature=2.0
             )
             return daily_words
 
@@ -90,7 +92,8 @@ def recommend_answer():
 
     @task
     def rec_n_days_answer(base_candidates: list, start_date: str, days: int):
-        log = {"not_exist":[], "duplicated":[], "success":[]}
+        log = {"not_exist": [], "duplicated": [], "success": []}
+        rec_succes_dates = []
         for d in range(days):
             tar_date = utils.add_days(start_date, d)
             special_candidates = cg.get_special_day_candidate(tar_date)
@@ -118,21 +121,21 @@ def recommend_answer():
                     log["duplicated"].append((tar_date, ans))
                 else:
                     log["success"].append((tar_date, ans))
+                    rec_succes_dates.append(tar_date)
                     break
-            log["other"] = base_candidates
-            pprint(log)
+        log["other"] = base_candidates
+        pprint(log)
+        return rec_succes_dates
 
+    @task(outlets=[datasets.answer_dataset])
+    def produce_quiz_dates(dates: list):
+        print(f"changed_answer_dates: {dates}")
+        yield Metadata(datasets.answer_dataset, {"changed_answer_dates": dates})
 
     start_date = get_start_date()
     candidates = generate_candidate(start_date)
-
-    trigger_register_quiz = TriggerDagRunOperator(
-        task_id="register_quizzes",
-        trigger_dag_id="register_quizzes",
-        conf={"start_date": "{{ ti.xcom_pull(task_ids='get_start_date') }}"},
-    )
-
-    rec_n_days_answer(candidates, start_date, configs.BATCH_SIZE) >> trigger_register_quiz
+    rec_succes_dates = rec_n_days_answer(candidates, start_date, configs.BATCH_SIZE)
+    produce_quiz_dates(rec_succes_dates)
 
 
 recommend_answer()

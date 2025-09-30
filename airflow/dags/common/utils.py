@@ -1,6 +1,7 @@
 import json
 import random
 import re
+import tempfile
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -57,3 +58,18 @@ def subtract_days(date_str: str, days: int) -> str:
     date_obj = datetime.strptime(date_str, "%Y-%m-%d")
     new_date = date_obj - timedelta(days=90)
     return new_date.strftime("%Y-%m-%d")
+
+
+def save_temp_json(data: dict, prefix: str) -> str:
+    """Save JSON to a temporary file. Returns file path."""
+    with tempfile.NamedTemporaryFile(
+        mode="w", delete=False, prefix=prefix, suffix=".json"
+    ) as f:
+        json.dump(data, f)
+        print(f"Saved quiz file : {f.name}")
+        return f.name
+
+
+def load_json(path: str):
+    with open(path, "r") as f:
+        return json.load(f)
