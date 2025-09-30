@@ -1,4 +1,5 @@
 import random
+from datetime import timedelta
 from pprint import pprint
 
 import pendulum
@@ -19,8 +20,8 @@ import common.utils as utils
 
 @dag(
     dag_id="recommend_answer",
-    # start_date=pendulum.datetime(2025, 9, 26 tz="Asia/Seoul"),
-    # schedule="0 17 * * 0,3,5"  # every sun, wed, fri at 5pm
+    start_date=pendulum.datetime(2025, 9, 26, tz="Asia/Seoul"),
+    schedule="0 17 * * 0,3,5",  # every sun, wed, fri at 5pm
     catchup=False,
     tags=["schedule", "producer"],
 )
@@ -29,7 +30,12 @@ def recommend_answer():
     def get_start_date(data_interval_end: pendulum.datetime) -> str:
         return data_interval_end.in_timezone("Asia/Seoul").add(days=1).to_date_string()
 
-    @task_group
+    @task_group(
+        default_args={
+            "retries": 5,
+            "retry_delay": timedelta(minutes=1),
+        }
+    )
     def generate_candidate(start_date: str):
         @task_group
         def get_trends_words():

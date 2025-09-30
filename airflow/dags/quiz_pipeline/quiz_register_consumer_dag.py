@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 from airflow.decorators import dag, task, task_group
 from airflow.exceptions import AirflowException
@@ -26,7 +27,7 @@ def register_quizzes():
         last_events = inlet_events[datasets.answer_dataset][-1]
         return last_events.extra["changed_answer_dates"]
 
-    @task_group
+    @task_group()
     def generate_and_upload_quizzes(date: str):
         @task
         def generate_quiz_and_save(date: str):
@@ -45,7 +46,7 @@ def register_quizzes():
             quiz_file_path = utils.save_temp_json(quiz.to_dict(), prefix="quiz_")
             return quiz_file_path
 
-        @task(pool="game_api_rate_limit")
+        @task(pool="game_api_rate_limit", retries=5, retry_delay=timedelta(minutes=1))
         def upload_quiz(quiz_file_path: str):
             try:
                 quiz = utils.load_json(quiz_file_path)
