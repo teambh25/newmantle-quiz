@@ -22,7 +22,7 @@ import common.utils as utils
     # start_date=pendulum.datetime(2025, 9, 26 tz="Asia/Seoul"),
     # schedule="0 17 * * 0,3,5"  # every sun, wed, fri at 5pm
     catchup=False,
-    tags=["schedule"],
+    tags=["schedule", "producer"],
 )
 def recommend_answer():
     @task
@@ -129,7 +129,7 @@ def recommend_answer():
 
     @task(outlets=[datasets.answer_dataset])
     def produce_quiz_dates(dates: list):
-        print(f"changed_answer_dates: {dates}")
+        print(f"changed answer dates: {dates}")
         yield Metadata(datasets.answer_dataset, {"changed_answer_dates": dates})
 
     start_date = get_start_date()

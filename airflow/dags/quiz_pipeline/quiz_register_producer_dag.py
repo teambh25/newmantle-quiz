@@ -20,7 +20,7 @@ import common.datasets as datasets
 def producer():
     @task(outlets=[datasets.answer_dataset])
     def produce_quiz_date(params: dict):
-        print(params["date"])
+        print(f"regiser date: {params['date']}")
         yield Metadata(
             datasets.answer_dataset, {"changed_answer_dates": [params["date"]]}
         )
