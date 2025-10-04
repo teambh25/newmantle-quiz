@@ -11,7 +11,7 @@ class Quiz:
         dists: List[Tuple[str, float]],
     ):
         self.date = date
-        self.answer = word
+        self.word = word
         self.tag = tag
         self.description = description
         self.scores: Dict[str, float] = self.cal_scores(dists)
@@ -37,8 +37,10 @@ class Quiz:
     def to_dict(self) -> Dict:
         return {
             "date": self.date,
-            "answer": self.answer,
-            # "tag": self.tag,
-            # "description": self.description,
+            "answer": {
+                "word" : self.word, 
+                "tag": self.tag,
+                "description": self.description,
+            },
             "scores": self.scores,
         }
