@@ -98,10 +98,16 @@ def recommend_answer():
 
     @task
     def rec_n_days_answer(base_candidates: list, start_date: str, days: int):
-        log = {"not_exist": [], "duplicated": [], "success": []}
+        log = {"not_exist": [], "duplicated": [], "success": [], "skipped_date": []}
         rec_succes_dates = []
+        
         for d in range(days):
             tar_date = utils.add_days(start_date, d)
+
+            if not utils.is_future(tar_date):
+                log["skipped_date"].append(tar_date)
+                continue
+
             special_candidates = cg.get_special_day_candidate(tar_date)
             use_special_candidate = special_candidates is not None and utils.with_prob(
                 configs.SPECIAL_DAY_PROB
