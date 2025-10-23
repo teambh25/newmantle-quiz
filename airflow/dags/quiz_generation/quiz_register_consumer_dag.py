@@ -11,7 +11,7 @@ import common.crud as crud
 import common.datasets as datasets
 import common.exceptions as exc
 import common.utils as utils
-from quiz_pipeline.quiz import Quiz
+from quiz_generation.quiz import Quiz
 
 
 @dag(
