@@ -17,8 +17,10 @@ x-airflow-common:
   volumes:
     - ./airflow/dags:/opt/airflow/dags
     - ./airflow/logs:/opt/airflow/logs
-    - ./airflow//config:/opt/airflow/config
+    - ./airflow/config:/opt/airflow/config
     - ./airflow/plugins:/opt/airflow/plugins
+    - ./data/game-logs:/opt/airflow/data/game-logs
+    - ~/.ssh/ssh-key-2025-09-02.key:/opt/airflow/.ssh/ssh-key-2025-09-02.key # ssh key
   user: "${AIRFLOW_UID:-50000}"
   depends_on:
     &airflow-common-depends-on
