@@ -1,0 +1,4 @@
+{
+    "game_api_rate_limit": {"slots": 1, "description": "Limits concurrent game API calls"},
+    "gemini_api_rate_limit": {"slots": 5, "description": "Limits concurrent gemini API calls"}
+}
