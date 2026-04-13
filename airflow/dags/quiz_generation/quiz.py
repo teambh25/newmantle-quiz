@@ -38,7 +38,7 @@ class Quiz:
         return {
             "date": self.date,
             "answer": {
-                "word" : self.word, 
+                "word": self.word,
                 "tag": self.tag,
                 "description": self.description,
             },

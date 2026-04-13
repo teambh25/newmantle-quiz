@@ -6,19 +6,23 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+
 def add_days(date_str: str, days: int) -> str:
     date_obj = datetime.strptime(date_str, "%Y-%m-%d")
     next_day = date_obj + timedelta(days=days)
     return next_day.strftime("%Y-%m-%d")
+
 
 def subtract_days(date_str: str, days: int) -> str:
     date_obj = datetime.strptime(date_str, "%Y-%m-%d")
     new_date = date_obj - timedelta(days=days)
     return new_date.strftime("%Y-%m-%d")
 
+
 def is_future(date_str: str) -> bool:
-    today_str = datetime.now(ZoneInfo('Asia/Seoul')).strftime("%Y-%m-%d")
+    today_str = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d")
     return date_str > today_str
+
 
 def gemini_resp_to_dict(resp: str):
     match = re.search(r"```json\s*(.*?)\s*```", resp, re.DOTALL)
@@ -32,6 +36,7 @@ def gemini_resp_to_dict(resp: str):
         raise ValueError("Fail to parsing json", resp)
     return data
 
+
 def load_and_fill_prompt(path: Path, fill_data: str = None) -> str:
     """
     load prompt and fill {{ data }} in prompt
@@ -41,6 +46,7 @@ def load_and_fill_prompt(path: Path, fill_data: str = None) -> str:
     if fill_data is not None:
         prompt = prompt.replace("{{ data }}", fill_data)
     return prompt
+
 
 def is_hangul_char(ch: str) -> bool:
     """function currently returns True only for 가~힣"""
@@ -68,6 +74,7 @@ def save_temp_json(data: dict, prefix: str) -> str:
         json.dump(data, f)
         print(f"Saved file : {f.name}")
         return f.name
+
 
 def load_json(path: str):
     with open(path, "r") as f:
