@@ -10,6 +10,7 @@ from airflow.utils.dates import days_ago
 import common.crud as crud
 import common.datasets as datasets
 import common.exceptions as exc
+import common.notifications as notifications
 import common.utils as utils
 from quiz_generation.quiz import Quiz
 
@@ -19,6 +20,7 @@ from quiz_generation.quiz import Quiz
     start_date=days_ago(1),
     schedule=[datasets.answer_dataset],
     catchup=False,
+    default_args={"on_failure_callback": notifications.notify_failure},
     tags=["consumer"],
 )
 def register_quizzes():

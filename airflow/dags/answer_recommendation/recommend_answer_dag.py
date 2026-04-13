@@ -15,6 +15,7 @@ import common.datasets as datasets
 import common.exceptions as exc
 import common.llm.gemini as gemini
 import common.llm.response_schemas as rs
+import common.notifications as notifications
 import common.utils as utils
 
 
@@ -23,6 +24,7 @@ import common.utils as utils
     start_date=pendulum.datetime(2025, 9, 26, tz="Asia/Seoul"),
     schedule="0 17 * * 0,3,5",  # every sun, wed, fri at 5pm
     catchup=False,
+    default_args={"on_failure_callback": notifications.notify_failure},
     tags=["schedule", "producer"],
 )
 def recommend_answer():
@@ -100,7 +102,7 @@ def recommend_answer():
     def rec_n_days_answer(base_candidates: list, start_date: str, days: int):
         log = {"not_exist": [], "duplicated": [], "success": [], "skipped_date": []}
         rec_succes_dates = []
-        
+
         for d in range(days):
             tar_date = utils.add_days(start_date, d)
 
