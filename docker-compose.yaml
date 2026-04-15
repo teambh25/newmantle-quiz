@@ -102,3 +102,32 @@ services:
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
       _PIP_ADDITIONAL_REQUIREMENTS: ''
     user: "0:0" # root 권한 실행
+
+  word-embedder:
+    build:
+      context: ./word-embedder
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      HF_HOME: ./data/models
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: quiz
+      DB_USER: quiz_admin
+      DB_PASSWORD: quiz
+    volumes:
+      - ./word-embedder:/src
+      - ./logs:/src/logs
+      - ./data:/src/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: ["word-embedder"]
+    restart: "no"

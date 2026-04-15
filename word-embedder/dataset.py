@@ -1,5 +1,4 @@
 from torch.utils.data import Dataset
-
 from utils import filter_special_token_word
 
 
@@ -18,9 +17,9 @@ def preprocessing(words, tokenizer):
     filtered_words = filter_special_token_word(tokenizer, words)
     # logger.info(f"embedding fail words: {' '.join(set(words) - set(filtered_words))}")
     print(
-        "[Data]" 
+        "[Data]"
         f"\n- Origin : {len(words)}"
         f"\n- After : {len(filtered_words)}"
         f"\n- Filtered : {len(words) - len(filtered_words)}"
-    )    
+    )
     return WordDataset(filtered_words)
