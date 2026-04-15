@@ -1,6 +1,11 @@
 transformers
 loguru
 tqdm
+pandas
+xlrd
+psycopg[binary]
+pgvector
+python-dotenv
 
 # Test
 pytest
