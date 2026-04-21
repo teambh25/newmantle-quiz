@@ -10,7 +10,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 CREATE TABLE IF NOT EXISTS vocabulary (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     word TEXT UNIQUE NOT NULL,
-    emb VECTOR(768) NOT NULL,
+    emb VECTOR(768) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS answer (
@@ -18,14 +18,15 @@ CREATE TABLE IF NOT EXISTS answer (
     word_id INTEGER NOT NULL,
     tag TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    FOREIGN KEY (word_id) REFERENCES vocabulary (id),
+    FOREIGN KEY (word_id) REFERENCES vocabulary (id)
 );
 
 -- grant all tables
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO quiz_admin;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO quiz_admin;
 
 -- insert init data
-COPY vocabulary(word, emb)
-FROM '/embedding/init.csv'
-DELIMITER ','
-CSV HEADER;
+-- COPY vocabulary(word, emb)
+-- FROM '/embedding/init.csv'
+-- DELIMITER ','
+-- CSV HEADER;
