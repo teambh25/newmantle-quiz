@@ -34,7 +34,7 @@ def recommend_answer():
 
     @task_group(
         default_args={
-            "retries": 5,
+            "retries": 2,
             "retry_delay": timedelta(minutes=1),
         }
     )
