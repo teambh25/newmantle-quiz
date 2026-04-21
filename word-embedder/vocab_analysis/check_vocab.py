@@ -106,10 +106,9 @@ if __name__ == "__main__":
 
     display_columns = ["어휘", "의미 번호", "구성 단위", "품사", "고유어 여부", "범주"]
     filters = [
-        lambda df: df["구성 단위"] == "단어",
-        lambda df: df["품사"] == "의명·조",
-        lambda df: df["범주"].isna(),  # 방언, 북한어, 옛말 제외
-        lambda df: df["어휘"].str.replace("-", "", regex=False).apply(is_hangul_string),
+        lambda df: df["구성 단위"] == "구",
+        # lambda df: df["범주"].isna(),  # 방언, 북한어, 옛말 제외
+        lambda df: df["어휘"].str.replace("^", "", regex=False).apply(is_hangul_string),
     ]
 
     print_samples(
