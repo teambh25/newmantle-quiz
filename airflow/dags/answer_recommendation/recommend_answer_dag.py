@@ -35,7 +35,8 @@ def recommend_answer():
     @task_group(
         default_args={
             "retries": 2,
-            "retry_delay": timedelta(minutes=1),
+            "retry_delay": timedelta(minutes=3),
+            "retry_exponential_backoff": True,
         }
     )
     def generate_candidate(start_date: str):
