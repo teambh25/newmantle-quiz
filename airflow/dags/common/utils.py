@@ -58,6 +58,12 @@ def is_hangul_string(s: str) -> bool:
     return s != "" and all(is_hangul_char(ch) for ch in s)
 
 
+def is_english_only(keyword: str) -> bool:
+    """Return True for keywords containing only ASCII letters and whitespace."""
+    letters = "".join(keyword.split())
+    return bool(letters) and letters.isascii() and letters.isalpha()
+
+
 def json_to_str(items: list) -> str:
     return json.dumps(items, ensure_ascii=False, indent=2)
 

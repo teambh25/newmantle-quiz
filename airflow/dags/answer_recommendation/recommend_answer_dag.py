@@ -45,12 +45,12 @@ def recommend_answer():
             @task
             def get_trends():
                 trends = cg.fetch_google_trends(
-                    hours=72, num_news=3, limit=20
+                    hours=72, max_news=3, limit=20
                 )  # 3 days trends
                 return trends
 
             @task
-            def extract_trend_words(trends: dict):
+            def extract_trend_words(trends: list):
                 prompt = utils.load_and_fill_prompt(
                     configs.PROMPTS.TREND, fill_data=utils.json_to_str(trends)
                 )
