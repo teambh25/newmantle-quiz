@@ -1,6 +1,3 @@
 FROM apache/airflow:2.11.0
-RUN pip install --no-cache-dir \
-    apache-airflow-providers-postgres \
-    apache-airflow-providers-http \ 
-    google-genai \
-    trendspy
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt

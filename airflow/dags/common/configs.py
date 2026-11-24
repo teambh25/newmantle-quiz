@@ -24,3 +24,9 @@ PROMPTS = PromptPaths()
 
 # Use Special day
 SPECIAL_DAY_PROB = 0.5
+
+# Google Trends (RSS buffer)
+TREND_RSS_URL = "https://trends.google.com/trending/rss"
+TREND_BUFFER_VARIABLE = "trend_buffer"
+TREND_WINDOW_HOURS = 48  # buffer retention & recommendation window
+TREND_LIMIT = 20  # number of trends passed to the prompt

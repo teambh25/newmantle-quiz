@@ -6,6 +6,7 @@ import pendulum
 from airflow.datasets.metadata import Metadata
 from airflow.decorators import dag, task, task_group
 from airflow.exceptions import AirflowException
+from airflow.models import Variable
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 import answer_recommendation.candidate_generation as cg
@@ -15,6 +16,7 @@ import common.datasets as datasets
 import common.exceptions as exc
 import common.llm.gemini as gemini
 import common.llm.response_schemas as rs
+import common.notifications as notifications
 import common.utils as utils
 
 
@@ -23,6 +25,7 @@ import common.utils as utils
     start_date=pendulum.datetime(2025, 9, 26, tz="Asia/Seoul"),
     schedule="0 17 * * 0,3,5",  # every sun, wed, fri at 5pm
     catchup=False,
+    default_args={"on_failure_callback": notifications.notify_failure},
     tags=["schedule", "producer"],
 )
 def recommend_answer():
@@ -32,22 +35,36 @@ def recommend_answer():
 
     @task_group(
         default_args={
-            "retries": 5,
-            "retry_delay": timedelta(minutes=1),
+            "retries": 2,
+            "retry_delay": timedelta(minutes=3),
+            "retry_exponential_backoff": True,
         }
     )
     def generate_candidate(start_date: str):
         @task_group
         def get_trends_words():
             @task
-            def get_trends():
-                trends = cg.fetch_google_trends(
-                    hours=72, num_news=3, limit=20
-                )  # 3 days trends
+            def get_trends(data_interval_end: pendulum.DateTime):
+                # Trends are accumulated from Google Trends RSS by collect_trends DAG
+                buffer = Variable.get(
+                    configs.TREND_BUFFER_VARIABLE, default_var={}, deserialize_json=True
+                )
+                trends = cg.select_top_trends(
+                    buffer,
+                    data_interval_end,
+                    hours=configs.TREND_WINDOW_HOURS,
+                    limit=configs.TREND_LIMIT,
+                )
+                print(f"#trends: {len(trends)} (buffer size: {len(buffer)})")
+                if not trends:
+                    raise ValueError(
+                        f"No trends in '{configs.TREND_BUFFER_VARIABLE}' within "
+                        f"{configs.TREND_WINDOW_HOURS}h; check collect_trends DAG"
+                    )
                 return trends
 
             @task
-            def extract_trend_words(trends: dict):
+            def extract_trend_words(trends: list):
                 prompt = utils.load_and_fill_prompt(
                     configs.PROMPTS.TREND, fill_data=utils.json_to_str(trends)
                 )
@@ -100,7 +117,7 @@ def recommend_answer():
     def rec_n_days_answer(base_candidates: list, start_date: str, days: int):
         log = {"not_exist": [], "duplicated": [], "success": [], "skipped_date": []}
         rec_succes_dates = []
-        
+
         for d in range(days):
             tar_date = utils.add_days(start_date, d)
 

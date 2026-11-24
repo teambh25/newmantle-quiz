@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ht="https://trends.google.com/trending/rss" version="2.0">
+	<channel>
+		<title>Daily Search Trends</title>
+		<description>Recent searches</description>
+		<link>https://trends.google.com/trending/rss?geo=KR</link>
+		<atom:link href="https://trends.google.com/trending/rss?geo=KR" rel="self" type="application/rss+xml"/>
+		<item>
+			<title>더 스카이 184</title>
+			<ht:approx_traffic>200+</ht:approx_traffic>
+			<description/>
+			<link>https://trends.google.com/trending/rss?geo=KR</link>
+			<pubDate>Wed, 11 Nov 2026 03:50:00 -0800</pubDate>
+			<ht:picture>https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS7JsYw0lTRBn7HdgrdGru9QNjI3iG_VWnaHKwt6U1b_tJ_0dsvOytPF9zYFyU</ht:picture>
+			<ht:picture_source>인천일보</ht:picture_source>
+			<ht:news_item>
+				<ht:news_item_title>볼거리 더한 청라하늘대교, 이용료 부담 덜고 손님맞이</ht:news_item_title>
+				<ht:news_item_snippet/>
+				<ht:news_item_url>https://www.incheonilbo.com/news/articleView.html?idxno=1336467</ht:news_item_url>
+				<ht:news_item_picture>https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS7JsYw0lTRBn7HdgrdGru9QNjI3iG_VWnaHKwt6U1b_tJ_0dsvOytPF9zYFyU</ht:news_item_picture>
+				<ht:news_item_source>인천일보</ht:news_item_source>
+			</ht:news_item>
+			<ht:news_item>
+				<ht:news_item_title>인천관광공사, THE SKY184 겨울맞이 공연·체험 프로그램 강화</ht:news_item_title>
+				<ht:news_item_snippet/>
+				<ht:news_item_url>https://www.newstown.co.kr/news/articleView.html?idxno=721367</ht:news_item_url>
+				<ht:news_item_picture>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXo4hNsrr-Vz37WKspSWPfsVmOEf3-JuPvwiM8ybYzsK6Yb0m7N5VgbZWBLAg</ht:news_item_picture>
+				<ht:news_item_source>뉴스타운</ht:news_item_source>
+			</ht:news_item>
+			<ht:news_item>
+				<ht:news_item_title>청라하늘대교 ‘더 스카이184’, 연말 가족 명소로 단장</ht:news_item_title>
+				<ht:news_item_snippet/>
+				<ht:news_item_url>https://www.sedaily.com/article/20112472</ht:news_item_url>
+				<ht:news_item_picture>https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcT1AOgQimtzIIS3gr1iRH2Yz6zi0mko57CCbhTqPM3PTtuhgOA32gFVWwLcSDM</ht:news_item_picture>
+				<ht:news_item_source>서울경제</ht:news_item_source>
+			</ht:news_item>
+		</item>
+		<item>
+			<title>고잔동</title>
+			<ht:approx_traffic>500+</ht:approx_traffic>
+			<description/>
+			<link>https://trends.google.com/trending/rss?geo=KR</link>
+			<pubDate>Wed, 11 Nov 2026 03:40:00 -0800</pubDate>
+			<ht:picture>https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRjFWNQ2M6jPgBm_coAm0hnu_UnGmo-npUvrvQVuwsVGMi58CYEYR8kyeHjKCw</ht:picture>
+			<ht:picture_source>KBS 뉴스</ht:picture_source>
+			<ht:news_item>
+				<ht:news_item_title>인천 고잔동 공장서 가스 누출 신고…5명 연기 흡입</ht:news_item_title>
+				<ht:news_item_snippet/>
+				<ht:news_item_url>https://news.kbs.co.kr/news/view.do?ncd=8710329</ht:news_item_url>
+				<ht:news_item_picture>https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRjFWNQ2M6jPgBm_coAm0hnu_UnGmo-npUvrvQVuwsVGMi58CYEYR8kyeHjKCw</ht:news_item_picture>
+				<ht:news_item_source>KBS 뉴스</ht:news_item_source>
+			</ht:news_item>
+			<ht:news_item>
+				<ht:news_item_title>인천 남동국가산단 도금공장 유독가스 신고…남동구 “유독가스 아닌 것으로 판별”</ht:news_item_title>
+				<ht:news_item_snippet/>
+				<ht:news_item_url>https://www.incheonilbo.com/news/articleView.html?idxno=1336620</ht:news_item_url>
+				<ht:news_item_picture>https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT5TkpkKJ_6NFB8uMIoWK4KQQCWzHbR4DmsFs7NcN6OV9MvbFuEavpIM-ksz8Y</ht:news_item_picture>
+				<ht:news_item_source>인천일보</ht:news_item_source>
+			</ht:news_item>
+			<ht:news_item>
+				<ht:news_item_title>[속보] 인천 남동공단 유독가스 유출···&quot;주민 대피&quot;</ht:news_item_title>
+				<ht:news_item_snippet/>
+				<ht:news_item_url>https://www.incheontoday.com/news/articleView.html?idxno=326251</ht:news_item_url>
+				<ht:news_item_picture>https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQTqtnVYwnBfAS__qRm11m-HAzy9t8tZrHDJF1es6tK6kRfK_Deh4iHyaqDQpo</ht:news_item_picture>
+				<ht:news_item_source>인천투데이</ht:news_item_source>
+			</ht:news_item>
+		</item>
+	</channel>
+</rss>

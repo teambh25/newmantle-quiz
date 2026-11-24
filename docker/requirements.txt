@@ -1,0 +1,4 @@
+# Runtime libraries for Airflow DAGs (shared by airflow.Dockerfile and test.Dockerfile)
+apache-airflow-providers-postgres
+apache-airflow-providers-http
+google-genai
